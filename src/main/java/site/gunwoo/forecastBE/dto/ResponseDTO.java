@@ -4,7 +4,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Getter @Setter
-public class ErrResDTO {
+public class ResponseDTO {
 
     private String msg;
+    private Object data;
 }

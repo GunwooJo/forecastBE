@@ -1,5 +1,7 @@
 package site.gunwoo.forecastBE.service;
 
+import jakarta.persistence.NoResultException;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -41,5 +43,18 @@ public class UserService {
             return false;
         }
         return true;
+    }
+
+    public void login(UserDTO userDTO, HttpSession session) {
+
+        User foundUser = userRepository.findByEmail(userDTO.getEmail())
+                .orElseThrow(() -> new NoResultException("해당 이메일을 가진 사용자가 없습니다.: " + userDTO.getEmail()));
+
+        if (passwordEncoder.matches(userDTO.getPassword(), foundUser.getPassword())) {
+            session.setAttribute("loggedInUser", foundUser.getEmail());
+            session.setMaxInactiveInterval(60 * 30); // 초 단위
+        } else {
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+        }
     }
 }

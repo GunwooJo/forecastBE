@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import site.gunwoo.forecastBE.dto.UserJoinDTO;
+import site.gunwoo.forecastBE.dto.UserDTO;
 import site.gunwoo.forecastBE.entity.User;
 import site.gunwoo.forecastBE.repository.UserRepository;
 
@@ -18,15 +18,15 @@ public class UserService {
     private final UserRepository userRepository;
     private BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
-    public void join(UserJoinDTO userJoinDTO) {
+    public void join(UserDTO userDTO) {
 
-        if(isEmailDuplicated(userJoinDTO.getEmail())) {
-            throw new IllegalArgumentException("이미 존재하는 이메일입니다: " + userJoinDTO.getEmail());
+        if(isEmailDuplicated(userDTO.getEmail())) {
+            throw new IllegalArgumentException("이미 존재하는 이메일입니다: " + userDTO.getEmail());
         }
 
-        String encodedPw = passwordEncoder.encode(userJoinDTO.getPassword());
+        String encodedPw = passwordEncoder.encode(userDTO.getPassword());
         User user = User.builder()
-                .email(userJoinDTO.getEmail())
+                .email(userDTO.getEmail())
                 .password(encodedPw)
                 .build();
 

@@ -1,6 +1,5 @@
 package site.gunwoo.forecastBE.dto;
 
-import jakarta.persistence.Column;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
@@ -9,7 +8,7 @@ import lombok.*;
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.NONE)
-public class UserJoinDTO {
+public class UserDTO {
 
     @NotBlank
     @Email
@@ -19,7 +18,7 @@ public class UserJoinDTO {
     private String password;
 
     @Builder
-    public UserJoinDTO(String email, String password) {
+    public UserDTO(String email, String password) {
         this.email = email;
         this.password = password;
     }

@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import site.gunwoo.forecastBE.dto.ResponseDTO;
-import site.gunwoo.forecastBE.dto.UserJoinDTO;
+import site.gunwoo.forecastBE.dto.UserDTO;
 import site.gunwoo.forecastBE.service.UserService;
 
 @RestController
@@ -18,10 +18,10 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/user/join")
-    public ResponseEntity<ResponseDTO> join(@RequestBody @Valid UserJoinDTO userJoinDTO) {
+    public ResponseEntity<ResponseDTO> join(@RequestBody @Valid UserDTO userDTO) {
 
         try {
-            userService.join(userJoinDTO);
+            userService.join(userDTO);
             return ResponseEntity.status(HttpStatus.CREATED).body(new ResponseDTO("회원가입에 성공했습니다.", null));
 
         } catch (IllegalArgumentException e) {

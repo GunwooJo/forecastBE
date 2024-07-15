@@ -23,8 +23,8 @@ public class AuthInterceptor implements HandlerInterceptor {
 
             return true;
         }
-        UserDTO loggedInUser = (UserDTO) request.getSession().getAttribute("loggedInUser");
-        if (loggedInUser == null) {
+        String loggedInUserEmail = (String) request.getSession().getAttribute("loggedInUser");
+        if (loggedInUserEmail == null) {
 
             response.setContentType(MediaType.APPLICATION_JSON_VALUE);
             response.setCharacterEncoding("UTF-8");

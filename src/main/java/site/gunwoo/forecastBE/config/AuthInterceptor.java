@@ -9,7 +9,6 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import site.gunwoo.forecastBE.dto.ResponseDTO;
-import site.gunwoo.forecastBE.dto.UserDTO;
 
 @Component
 @Slf4j

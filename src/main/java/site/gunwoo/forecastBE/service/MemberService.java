@@ -6,48 +6,48 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import site.gunwoo.forecastBE.dto.UserDTO;
-import site.gunwoo.forecastBE.entity.User;
-import site.gunwoo.forecastBE.repository.UserRepository;
+import site.gunwoo.forecastBE.dto.MemberDTO;
+import site.gunwoo.forecastBE.entity.Member;
+import site.gunwoo.forecastBE.repository.MemberRepository;
 
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 @Transactional
-public class UserService {
+public class MemberService {
 
-    private final UserRepository userRepository;
+    private final MemberRepository memberRepository;
     private BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
-    public void join(UserDTO userDTO) {
+    public void join(MemberDTO userDTO) {
 
         if(isEmailDuplicated(userDTO.getEmail())) {
             throw new IllegalArgumentException("이미 존재하는 이메일입니다: " + userDTO.getEmail());
         }
 
         String encodedPw = passwordEncoder.encode(userDTO.getPassword());
-        User user = User.builder()
+        Member user = Member.builder()
                 .email(userDTO.getEmail())
                 .password(encodedPw)
                 .build();
 
-        userRepository.save(user);
+        memberRepository.save(user);
 
     }
 
     private boolean isEmailDuplicated(String email) {
 
-        Optional<User> byEmail = userRepository.findByEmail(email);
+        Optional<Member> byEmail = memberRepository.findByEmail(email);
         if (byEmail.isEmpty()) {
             return false;
         }
         return true;
     }
 
-    public void login(UserDTO userDTO, HttpSession session) {
+    public void login(MemberDTO userDTO, HttpSession session) {
 
-        User foundUser = userRepository.findByEmail(userDTO.getEmail())
+        Member foundUser = memberRepository.findByEmail(userDTO.getEmail())
                 .orElseThrow(() -> new NoResultException("해당 이메일을 가진 사용자가 없습니다.: " + userDTO.getEmail()));
 
         if (passwordEncoder.matches(userDTO.getPassword(), foundUser.getPassword())) {

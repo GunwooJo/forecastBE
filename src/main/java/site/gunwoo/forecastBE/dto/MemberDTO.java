@@ -8,7 +8,7 @@ import lombok.*;
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.NONE)
-public class UserDTO {
+public class MemberDTO {
 
     @NotBlank
     @Email
@@ -18,7 +18,7 @@ public class UserDTO {
     private String password;
 
     @Builder
-    public UserDTO(String email, String password) {
+    public MemberDTO(String email, String password) {
         this.email = email;
         this.password = password;
     }

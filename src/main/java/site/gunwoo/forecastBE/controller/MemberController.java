@@ -12,23 +12,23 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import site.gunwoo.forecastBE.dto.ResponseDTO;
-import site.gunwoo.forecastBE.dto.UserDTO;
+import site.gunwoo.forecastBE.dto.MemberDTO;
 import site.gunwoo.forecastBE.service.ShortForecastService;
-import site.gunwoo.forecastBE.service.UserService;
+import site.gunwoo.forecastBE.service.MemberService;
 
 @RestController
 @RequiredArgsConstructor
 @Slf4j
-public class UserController {
+public class MemberController {
 
-    private final UserService userService;
+    private final MemberService memberService;
     private final ShortForecastService shortForecastService;
 
     @PostMapping("/user/join")
-    public ResponseEntity<ResponseDTO> join(@RequestBody @Valid UserDTO userDTO) {
+    public ResponseEntity<ResponseDTO> join(@RequestBody @Valid MemberDTO memberDTO) {
 
         try {
-            userService.join(userDTO);
+            memberService.join(memberDTO);
             return ResponseEntity.status(HttpStatus.CREATED).body(new ResponseDTO("회원가입에 성공했습니다.", null));
 
         } catch (IllegalArgumentException e) {
@@ -40,10 +40,10 @@ public class UserController {
     }
 
     @PostMapping("/user/login")
-    public ResponseEntity<ResponseDTO> login(@RequestBody @Valid UserDTO userDTO, HttpSession session) {
+    public ResponseEntity<ResponseDTO> login(@RequestBody @Valid MemberDTO memberDTO, HttpSession session) {
 
         try {
-            userService.login(userDTO, session);
+            memberService.login(memberDTO, session);
             return ResponseEntity.status(HttpStatus.OK).body(new ResponseDTO("로그인에 성공했습니다.", null));
 
         } catch (NoResultException | IllegalArgumentException e) {
@@ -57,7 +57,9 @@ public class UserController {
     public ResponseEntity<ResponseDTO> test() {
 
         try {
-            shortForecastService.saveShortForecast("20240726", "0200", 300, 1, 62, 123);
+            shortForecastService.saveShortForecast("20240731", "1400", 1000, 1, 62, 123);
+            shortForecastService.saveShortForecast("20240731", "1400", 1000, 1, 55, 123);
+
             return ResponseEntity.status(HttpStatus.CREATED).body(new ResponseDTO("단기예보 저장완료.", null));
 
         } catch (Exception e) {

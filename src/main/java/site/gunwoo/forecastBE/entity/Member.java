@@ -7,7 +7,7 @@ import org.springframework.util.Assert;
 @Entity
 @Getter @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class User extends BaseTime{
+public class Member extends BaseTime{
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
@@ -21,7 +21,7 @@ public class User extends BaseTime{
     private String password;
 
     @Builder
-    public User(String email, String password) {
+    public Member(String email, String password) {
         Assert.hasText(email, "email은 필수입니다.");
         Assert.hasText(password, "password는 필수입니다.");
         this.email = email;

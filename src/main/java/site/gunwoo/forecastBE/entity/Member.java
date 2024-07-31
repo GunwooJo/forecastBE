@@ -2,7 +2,6 @@ package site.gunwoo.forecastBE.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.util.Assert;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +12,7 @@ import java.util.List;
 public class Member extends BaseTime{
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_id")
+    @Column(name = "member_id")
     @Setter(AccessLevel.NONE)
     private Long id;
 
@@ -23,14 +22,19 @@ public class Member extends BaseTime{
     @Column(nullable = false, length = 60)
     private String password;
 
-    @OneToMany(mappedBy = "member")
-    private List<MemberRegion> regions = new ArrayList<>();
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Setter(AccessLevel.NONE)
+    private List<MemberRegion> memberRegions = new ArrayList<>();
+
+    public void changeMemberRegions(List<MemberRegion> memberRegions) {
+        memberRegions.forEach(memberRegion -> memberRegion.setMember(this));
+        this.memberRegions = memberRegions;
+    }
 
     @Builder
-    public Member(String email, String password) {
-        Assert.hasText(email, "email은 필수입니다.");
-        Assert.hasText(password, "password는 필수입니다.");
+    public Member(String email, String password, List<MemberRegion> memberRegions) {
         this.email = email;
         this.password = password;
+        changeMemberRegions(memberRegions);
     }
 }

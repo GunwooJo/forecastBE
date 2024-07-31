@@ -24,8 +24,4 @@ public class Region {
 
     @Column(name = "y_pos", nullable = false)
     private Short yPos;
-
-    @OneToMany(mappedBy = "region")
-    @Setter
-    private List<MemberRegion> memberRegions = new ArrayList<>();
 }

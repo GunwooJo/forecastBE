@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@Getter
+@Getter @Setter
 public class MemberRegion {
 
     @Id
@@ -16,8 +16,16 @@ public class MemberRegion {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
     private Member member;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "region_id")
     private Region region;
+
+    public static MemberRegion createMemberRegion(Region region) {
+        MemberRegion memberRegion = new MemberRegion();
+        memberRegion.setRegion(region);
+        return memberRegion;
+    }
 }

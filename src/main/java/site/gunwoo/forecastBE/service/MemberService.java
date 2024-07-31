@@ -7,9 +7,14 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import site.gunwoo.forecastBE.dto.MemberDTO;
+import site.gunwoo.forecastBE.dto.MemberJoinDTO;
 import site.gunwoo.forecastBE.entity.Member;
+import site.gunwoo.forecastBE.entity.MemberRegion;
+import site.gunwoo.forecastBE.entity.Region;
 import site.gunwoo.forecastBE.repository.MemberRepository;
+import site.gunwoo.forecastBE.repository.RegionRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -18,18 +23,31 @@ import java.util.Optional;
 public class MemberService {
 
     private final MemberRepository memberRepository;
+    private final RegionRepository regionRepository;
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
-    public void join(MemberDTO userDTO) {
+    public void join(MemberJoinDTO memberJoinDTO) {
 
-        if(isEmailDuplicated(userDTO.getEmail())) {
-            throw new IllegalArgumentException("이미 존재하는 이메일입니다: " + userDTO.getEmail());
+        if(isEmailDuplicated(memberJoinDTO.getEmail())) {
+            throw new IllegalArgumentException("이미 존재하는 이메일입니다: " + memberJoinDTO.getEmail());
         }
 
-        String encodedPw = passwordEncoder.encode(userDTO.getPassword());
+        String encodedPw = passwordEncoder.encode(memberJoinDTO.getPassword());
+
+        List<String> regions = memberJoinDTO.getRegions();
+
+        List<Region> foundRegions = regions.stream()
+                .map(regionRepository::findByName)
+                .toList();
+
+        List<MemberRegion> memberRegions = foundRegions.stream()
+                .map(MemberRegion::createMemberRegion)
+                .toList();
+
         Member user = Member.builder()
-                .email(userDTO.getEmail())
+                .email(memberJoinDTO.getEmail())
                 .password(encodedPw)
+                .memberRegions(memberRegions)
                 .build();
 
         memberRepository.save(user);

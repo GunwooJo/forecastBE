@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import site.gunwoo.forecastBE.dto.MemberJoinDTO;
 import site.gunwoo.forecastBE.dto.ResponseDTO;
 import site.gunwoo.forecastBE.dto.MemberDTO;
 import site.gunwoo.forecastBE.service.ShortForecastService;
@@ -25,16 +26,18 @@ public class MemberController {
     private final ShortForecastService shortForecastService;
 
     @PostMapping("/user/join")
-    public ResponseEntity<ResponseDTO> join(@RequestBody @Valid MemberDTO memberDTO) {
+    public ResponseEntity<ResponseDTO> join(@RequestBody @Valid MemberJoinDTO memberJoinDTO) {
 
         try {
-            memberService.join(memberDTO);
+            memberService.join(memberJoinDTO);
             return ResponseEntity.status(HttpStatus.CREATED).body(new ResponseDTO("회원가입에 성공했습니다.", null));
 
         } catch (IllegalArgumentException e) {
+            log.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.CONFLICT).body(new ResponseDTO(e.getMessage(), null));
 
         } catch (Exception e) {
+            log.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseDTO("회원가입에 실패했습니다: " + e.getMessage(), null));
         }
     }

@@ -18,7 +18,7 @@ public class Region {
     @Column(name = "region_id")
     private Long id;
 
-    @Column(name = "region_id", length = 30, nullable = false, unique = true, )
+    @Column(length = 30, nullable = false, unique = true)
     private String name;
 
     @Column(name = "x_pos", nullable = false)

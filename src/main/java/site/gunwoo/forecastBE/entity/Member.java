@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.util.Assert;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Getter @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -19,6 +22,9 @@ public class Member extends BaseTime{
 
     @Column(nullable = false, length = 60)
     private String password;
+
+    @OneToMany(mappedBy = "member")
+    private List<MemberRegion> regions = new ArrayList<>();
 
     @Builder
     public Member(String email, String password) {

@@ -14,8 +14,11 @@ import org.springframework.web.bind.annotation.RestController;
 import site.gunwoo.forecastBE.dto.MemberJoinDTO;
 import site.gunwoo.forecastBE.dto.ResponseDTO;
 import site.gunwoo.forecastBE.dto.MemberDTO;
+import site.gunwoo.forecastBE.repository.RegionRepository;
 import site.gunwoo.forecastBE.service.ShortForecastService;
 import site.gunwoo.forecastBE.service.MemberService;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -24,6 +27,7 @@ public class MemberController {
 
     private final MemberService memberService;
     private final ShortForecastService shortForecastService;
+    private final RegionRepository regionRepository;
 
     @PostMapping("/user/join")
     public ResponseEntity<ResponseDTO> join(@RequestBody @Valid MemberJoinDTO memberJoinDTO) {
@@ -60,10 +64,23 @@ public class MemberController {
     public ResponseEntity<ResponseDTO> test() {
 
         try {
-            shortForecastService.saveShortForecast("20240731", "1400", 1000, 1, 62, 123);
-            shortForecastService.saveShortForecast("20240731", "1400", 1000, 1, 55, 123);
+//            shortForecastService.saveShortForecast("20240731", "1400", 1000, 1, 62, 123);
+//            shortForecastService.saveShortForecast("20240731", "1400", 1000, 1, 55, 123);
+            List<Object[]> distinctByXPosAndYPos = regionRepository.findDistinctByXPosAndYPos();
+            if (distinctByXPosAndYPos.isEmpty()) {
+                log.error("값 없음.");
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseDTO("서버 에러가 발생했습니다 ", null));
 
-            return ResponseEntity.status(HttpStatus.CREATED).body(new ResponseDTO("단기예보 저장완료.", null));
+            } else {
+                for (Object[] distinctByXPosAndYPo : distinctByXPosAndYPos) {
+                    Short x = (Short) distinctByXPosAndYPo[0];
+                    Short y = (Short) distinctByXPosAndYPo[1];
+                    System.out.println("[" + x + ", " + y + "]");
+                }
+            }
+
+
+            return ResponseEntity.status(HttpStatus.CREATED).body(new ResponseDTO("성공", null));
 
         } catch (Exception e) {
             log.error(e.getMessage());

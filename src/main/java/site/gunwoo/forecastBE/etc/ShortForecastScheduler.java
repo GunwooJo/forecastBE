@@ -41,7 +41,7 @@ public class ShortForecastScheduler {
     }
 
     /* 생성된지 1일이 지난 단기예보 데이터 삭제 */
-    @Scheduled(cron = "0 12 4 * * ?")
+    @Scheduled(cron = "0 0 4 * * ?")    //0초 0분 4시 매일 매월 모든요일에 실행
     public void deleteForecastData() {
         LocalDateTime oneDayAgo = LocalDateTime.now().minusDays(1);
         shortForecastRepository.deleteShortForecastByCreatedAtBefore(oneDayAgo);

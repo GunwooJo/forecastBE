@@ -4,9 +4,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import site.gunwoo.forecastBE.repository.RegionRepository;
+import site.gunwoo.forecastBE.repository.ShortForecastRepository;
 import site.gunwoo.forecastBE.service.ShortForecastService;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -17,6 +19,7 @@ public class ShortForecastScheduler {
 
     private final RegionRepository regionRepository;
     private final ShortForecastService shortForecastService;
+    private final ShortForecastRepository shortForecastRepository;
 
     /* 3시간마다 단기예보 데이터 받아오기 */
     @Scheduled(cron = "0 12 2,5,8,11,14,17,20,23 * * ?")
@@ -35,5 +38,12 @@ public class ShortForecastScheduler {
 
             shortForecastService.saveShortForecast(currentDate, currentTime, 1000, 1, xPos, yPos);
         }
+    }
+
+    /* 생성된지 1일이 지난 단기예보 데이터 삭제 */
+    @Scheduled(cron = "0 12 4 * * ?")
+    public void deleteForecastData() {
+        LocalDateTime oneDayAgo = LocalDateTime.now().minusDays(1);
+        shortForecastRepository.deleteShortForecastByCreatedAtBefore(oneDayAgo);
     }
 }

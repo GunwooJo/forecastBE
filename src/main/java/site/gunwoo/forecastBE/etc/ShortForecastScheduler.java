@@ -22,7 +22,7 @@ public class ShortForecastScheduler {
     private final ShortForecastRepository shortForecastRepository;
 
     /* 3시간마다 단기예보 데이터 받아오기 */
-    @Scheduled(cron = "0 12 2,5,8,11,14,17,20,23 * * ?")
+    @Scheduled(cron = "0 13 2,5,8,11,14,17,20,23 * * ?")
     public void getShortForecastData() {
 
         List<Object[]> positionList = regionRepository.findDistinctByXPosAndYPos();

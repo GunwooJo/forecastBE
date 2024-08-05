@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 import site.gunwoo.forecastBE.config.ForecastConstants;
+import site.gunwoo.forecastBE.dto.MailDTO;
 import site.gunwoo.forecastBE.dto.ShortForeCastResponseDTO;
 import site.gunwoo.forecastBE.entity.ShortForecast;
 import site.gunwoo.forecastBE.exception.ShortForecastException;
@@ -25,6 +26,8 @@ public class ShortForecastService {
 
     private final WebClient.Builder webClientBuilder;
     private final ShortForecastRepository shortForecastRepository;
+    private final MailService mailService;
+    private static final String adminEmail = "kanggi1997@gmail.com";
 
     //강수확률을 알기 위한 단기예보 조회 후 저장.
     public void saveShortForecast(String baseDate, String baseTime, int numOfRows, int pageNo, int nx, int ny) {
@@ -58,6 +61,15 @@ public class ShortForecastService {
 
             if (!"00".equals(response.getResponse().getHeader().getResultCode())) {   //00은 정상 응답 시 받는 code.
 
+                String emailTitle = "단기예보 API 문제 발생!";
+                String emailMessage = "에러코드: " + response.getResponse().getHeader().getResultCode() + "\n"
+                        + "메시지: " + response.getResponse().getHeader().getResultMsg();
+                MailDTO mailDTO = MailDTO.builder()
+                        .address(adminEmail)
+                        .title(emailTitle)
+                        .message(emailMessage)
+                        .build();
+                mailService.mailSend(mailDTO);
                 throw new ShortForecastException(response.getResponse().getHeader().getResultMsg());
             }
 
@@ -82,6 +94,16 @@ public class ShortForecastService {
             shortForecastRepository.saveAll(forecastItems);
 
         } catch (WebClientResponseException ex) {
+
+            String emailTitle = "단기예보 API 호출 중 오류 발생!";
+            String emailMessage = "에러코드: " + ex.getStatusCode() + "\n" + "메시지: " + ex.getMessage();
+            MailDTO mailDTO = MailDTO.builder()
+                    .address(adminEmail)
+                    .title(emailTitle)
+                    .message(emailMessage)
+                    .build();
+            mailService.mailSend(mailDTO);
+
             if (ex.getStatusCode().is4xxClientError()) {
                 log.error(ex.getMessage());
                 throw new ShortForecastException("단기예보 api 호출 중 client 에러 발생", ex);

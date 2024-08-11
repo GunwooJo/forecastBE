@@ -1,0 +1,61 @@
+spring:
+  profiles:
+    default: local
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: kanggi1997@gmail.com
+    password: gayhryapewwqkejq
+    properties:
+      mail:
+        smtp:
+          starttls:
+            enable: true
+          auth: true
+---
+spring:
+  config:
+    activate:
+      on-profile: local
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/forecast?useSSL=false
+    driver-class-name: org.postgresql.Driver
+    username: gunwoo
+
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+
+---
+spring:
+  config:
+    activate:
+      on-profile: test
+  h2:
+    console:
+      enabled: true # /h2-console 설정
+  datasource:
+    url: jdbc:h2:mem:~/databasesByH2/forecastBE
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+
+  jpa:
+    properties:
+      hibernate:
+        format_sql: true
+    show-sql: true
+    hibernate:
+      ddl-auto: create

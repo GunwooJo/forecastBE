@@ -39,6 +39,10 @@ dependencies {
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
+test {
+	jvmArgs("-XX:+EnableDynamicAgentLoading", "-Xshare:off") //테스트 경고문구 없애는 용도.
+}
+
 tasks.named('test') {
 	useJUnitPlatform()
 }

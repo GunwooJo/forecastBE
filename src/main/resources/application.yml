@@ -59,3 +59,4 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: create
+    defer-datasource-initialization: true # (SpringBoot 2.5~) Hibernate 초기화 이후 data.sql 실행

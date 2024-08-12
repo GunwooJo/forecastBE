@@ -24,8 +24,9 @@ public class MemberJoinDTO {
     private List<String> regions = new ArrayList<>();
 
     @Builder
-    public MemberJoinDTO(String email, String password) {
+    public MemberJoinDTO(String email, String password, List<String> regions) {
         this.email = email;
         this.password = password;
+        this.regions = regions;
     }
 }

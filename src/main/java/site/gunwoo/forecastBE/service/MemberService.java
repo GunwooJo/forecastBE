@@ -15,6 +15,7 @@ import site.gunwoo.forecastBE.repository.MemberRepository;
 import site.gunwoo.forecastBE.repository.RegionRepository;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -37,7 +38,14 @@ public class MemberService {
         List<String> regions = memberJoinDTO.getRegions();
 
         List<Region> foundRegions = regions.stream()
-                .map(regionRepository::findByName)
+                .map(region -> {
+                    Region foundRegion = regionRepository.findByName(region);
+                    if (foundRegion == null) {
+                        throw new NoSuchElementException("존재하지 않는 지역입니다.");
+                    } else {
+                        return foundRegion;
+                    }
+                })
                 .toList();
 
         List<MemberRegion> memberRegions = foundRegions.stream()

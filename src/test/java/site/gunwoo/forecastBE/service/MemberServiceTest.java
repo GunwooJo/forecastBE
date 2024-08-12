@@ -1,4 +1,4 @@
-package site.gunwoo.forecastBE.domain.member;
+package site.gunwoo.forecastBE.service;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

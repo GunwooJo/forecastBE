@@ -20,13 +20,9 @@ public class MemberJoinDTO {
     @NotEmpty
     private String password;
 
-    @NotEmpty
-    private List<String> regions = new ArrayList<>();
-
     @Builder
     public MemberJoinDTO(String email, String password, List<String> regions) {
         this.email = email;
         this.password = password;
-        this.regions = regions;
     }
 }

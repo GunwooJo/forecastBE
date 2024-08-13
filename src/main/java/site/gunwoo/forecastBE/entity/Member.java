@@ -35,6 +35,5 @@ public class Member extends BaseTime{
     public Member(String email, String password, List<MemberRegion> memberRegions) {
         this.email = email;
         this.password = password;
-        changeMemberRegions(memberRegions);
     }
 }

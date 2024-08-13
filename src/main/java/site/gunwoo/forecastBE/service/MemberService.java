@@ -24,7 +24,6 @@ import java.util.Optional;
 public class MemberService {
 
     private final MemberRepository memberRepository;
-    private final RegionRepository regionRepository;
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     public void join(MemberJoinDTO memberJoinDTO) {
@@ -35,27 +34,9 @@ public class MemberService {
 
         String encodedPw = passwordEncoder.encode(memberJoinDTO.getPassword());
 
-        List<String> regions = memberJoinDTO.getRegions();
-
-        List<Region> foundRegions = regions.stream()
-                .map(region -> {
-                    Region foundRegion = regionRepository.findByName(region);
-                    if (foundRegion == null) {
-                        throw new NoSuchElementException("존재하지 않는 지역입니다.");
-                    } else {
-                        return foundRegion;
-                    }
-                })
-                .toList();
-
-        List<MemberRegion> memberRegions = foundRegions.stream()
-                .map(MemberRegion::createMemberRegion)
-                .toList();
-
         Member user = Member.builder()
                 .email(memberJoinDTO.getEmail())
                 .password(encodedPw)
-                .memberRegions(memberRegions)
                 .build();
 
         memberRepository.save(user);

@@ -14,6 +14,7 @@ import site.gunwoo.forecastBE.exception.ShortForecastException;
 import site.gunwoo.forecastBE.repository.ShortForecastRepository;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -61,9 +62,14 @@ public class ShortForecastService {
 
             if (!"00".equals(response.getResponse().getHeader().getResultCode())) {   //00은 정상 응답 시 받는 code.
 
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmm");
+                String dateTimeNow = LocalDateTime.now().format(formatter);
+
                 String emailTitle = "단기예보 API 문제 발생!";
                 String emailMessage = "에러코드: " + response.getResponse().getHeader().getResultCode() + "\n"
-                        + "메시지: " + response.getResponse().getHeader().getResultMsg();
+                        + "메시지: " + response.getResponse().getHeader().getResultMsg() + "\n" +
+                        "에러발생 시각: " + dateTimeNow;
+
                 MailDTO mailDTO = MailDTO.builder()
                         .address(adminEmail)
                         .title(emailTitle)

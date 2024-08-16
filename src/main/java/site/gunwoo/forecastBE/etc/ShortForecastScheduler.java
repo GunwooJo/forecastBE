@@ -37,7 +37,7 @@ public class ShortForecastScheduler {
             DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HHmm");
             String currentTime = LocalTime.now().withMinute(0).format(timeFormatter); // 분을 0으로 설정
 
-            shortForecastService.saveShortForecast(currentDate, currentTime, 1000, 1, xPos, yPos);
+            shortForecastService.saveShortForecast(currentDate, currentTime, 36, 1, xPos, yPos);
         }
     }
 

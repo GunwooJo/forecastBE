@@ -19,6 +19,7 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 @RequiredArgsConstructor
@@ -163,6 +164,10 @@ public class ShortForecastService {
             baseDate = currentDate.minusDays(1);
         }
 
-        return shortForecastRepository.findShortForecast(baseDate, closestPastTime, nx, ny);
+        List<ShortForecast> forecasts = shortForecastRepository.findShortForecast(baseDate, closestPastTime, nx, ny);
+        if (forecasts.isEmpty()) {
+            throw new NoSuchElementException("해당하는 단기예보 데이터가 없습니다.");
+        }
+        return forecasts;
     }
 }

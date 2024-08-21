@@ -17,6 +17,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -125,5 +126,43 @@ public class ShortForecastService {
         }
 
 
+    }
+
+    public List<ShortForecast> findShortForecast(LocalDateTime now, int nx, int ny) {
+        LocalDate currentDate = now.toLocalDate();
+        LocalTime currentTime = now.toLocalTime();
+
+        List<LocalTime> targetTimes = Arrays.asList(
+                LocalTime.of(2, 13),
+                LocalTime.of(5, 13),
+                LocalTime.of(8, 13),
+                LocalTime.of(11, 13),
+                LocalTime.of(14, 13),
+                LocalTime.of(17, 13),
+                LocalTime.of(20, 13),
+                LocalTime.of(23, 13)
+        );
+
+        LocalTime closestPastTime = null;
+
+        if(currentTime.isAfter(LocalTime.of(23, 13)) || currentTime.isBefore(LocalTime.of(2,13))) {
+            closestPastTime = LocalTime.of(23,0);
+
+        } else {
+            for (LocalTime targetTime : targetTimes) {
+                if (targetTime.isBefore(currentTime)) {
+                    if (closestPastTime == null || targetTime.isAfter(closestPastTime)) {
+                        closestPastTime = targetTime.minusMinutes(13);
+                    }
+                }
+            }
+        }
+
+        LocalDate baseDate = currentDate;
+        if(currentTime.isAfter(LocalTime.of(0,0)) && currentTime.isBefore(LocalTime.of(2, 0))) {
+            baseDate = currentDate.minusDays(1);
+        }
+
+        return shortForecastRepository.findShortForecast(baseDate, closestPastTime, nx, ny);
     }
 }

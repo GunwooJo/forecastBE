@@ -11,9 +11,9 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.NoSuchElementException;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.tuple;
+import static org.assertj.core.api.Assertions.*;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -40,5 +40,19 @@ public class ShortForecastServiceTest {
                 .containsExactlyInAnyOrder(
                         tuple(localDate, LocalTime.of(23, 0), 62, 123)
                 );
+    }
+
+    @DisplayName("단기예보 데이터가 db에 없을 경우 예외를 발생시킨다.")
+    @Test
+    void findShortForecastNoResult() {
+        //given
+        LocalDateTime localDateTime = LocalDateTime.of(3500, 1, 1, 23, 14);
+        int x = 62;
+        int y = 123;
+
+        //when, then
+        assertThatThrownBy(() -> shortForecastService.findShortForecast(localDateTime, x, y))
+                .isInstanceOf(NoSuchElementException.class)
+                .hasMessage("해당하는 단기예보 데이터가 없습니다.");
     }
 }

@@ -7,13 +7,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Getter @Setter
+@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member extends BaseTime{
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "member_id")
-    @Setter(AccessLevel.NONE)
     private Long id;
 
     @Column(unique = true, nullable = false, length = 50)
@@ -23,7 +22,6 @@ public class Member extends BaseTime{
     private String password;
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
-    @Setter(AccessLevel.NONE)
     private List<MemberRegion> memberRegions = new ArrayList<>();
 
     public void changeMemberRegions(List<MemberRegion> memberRegions) {
@@ -35,5 +33,6 @@ public class Member extends BaseTime{
     public Member(String email, String password, List<MemberRegion> memberRegions) {
         this.email = email;
         this.password = password;
+        this.memberRegions = memberRegions;
     }
 }

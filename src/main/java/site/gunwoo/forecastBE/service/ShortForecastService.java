@@ -10,6 +10,7 @@ import site.gunwoo.forecastBE.config.ForecastConstants;
 import site.gunwoo.forecastBE.dto.MailDTO;
 import site.gunwoo.forecastBE.dto.ShortForeCastResponseDTO;
 import site.gunwoo.forecastBE.entity.ShortForecast;
+import site.gunwoo.forecastBE.exception.ShortForecastApiException;
 import site.gunwoo.forecastBE.exception.ShortForecastException;
 import site.gunwoo.forecastBE.repository.ShortForecastRepository;
 
@@ -127,6 +128,58 @@ public class ShortForecastService {
         }
 
 
+    }
+
+    public List<ShortForeCastResponseDTO.Response.Body.Items.ForecastItem> callShortForecastApi(String baseDate, String baseTime, int numOfRows, int pageNo, int nx, int ny) {
+        WebClient webClient = webClientBuilder
+                .baseUrl("http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0")
+                .build();
+
+        String uri = "/getVilageFcst";
+
+        try {
+            ShortForeCastResponseDTO response = webClient.get()
+                    .uri(uriBuilder -> uriBuilder
+                            .path(uri)
+                            .queryParam("serviceKey", ForecastConstants.serviceKey)
+                            .queryParam("numOfRows", numOfRows)
+                            .queryParam("pageNo", pageNo)
+                            .queryParam("dataType", "JSON")
+                            .queryParam("base_date", baseDate)
+                            .queryParam("base_time", baseTime)
+                            .queryParam("nx", nx)
+                            .queryParam("ny", ny)
+                            .build())
+                    .retrieve()
+                    .bodyToMono(ShortForeCastResponseDTO.class)
+                    .block();
+
+            if (response == null) {
+                throw new ShortForecastException("단기예보 API 요청에 대한 응답을 받지 못했습니다");
+            }
+
+            if (!"00".equals(response.getResponse().getHeader().getResultCode())) {   //00은 정상 응답 시 받는 code.
+
+                throw new ShortForecastApiException("단기예보 API 호출 중 문제 발생!", response.getResponse().getHeader().getResultCode(), response.getResponse().getHeader().getResultMsg());
+            }
+
+            return response.getResponse().getBody().getItems().getItem();
+
+        } catch (WebClientResponseException ex) {
+
+            if (ex.getStatusCode().is4xxClientError()) {
+                log.error(ex.getMessage());
+                throw new ShortForecastApiException("단기예보 api 호출 중 client 에러 발생", ex);
+
+            } else if (ex.getStatusCode().is5xxServerError()) {
+                log.error(ex.getMessage());
+                throw new ShortForecastApiException("단기예보 api 호출 중 server 에러 발생", ex);
+
+            } else {
+                log.error(ex.getMessage());
+                throw new RuntimeException("예상치 못한 에러 발생", ex);
+            }
+        }
     }
 
     public List<ShortForecast> findShortForecast(LocalDateTime now, int nx, int ny) {

@@ -20,6 +20,10 @@ public class ShortForecastApiException extends RuntimeException{
         this.errorMsg = errorMsg;
     }
 
+    public ShortForecastApiException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
     public ShortForecastApiException(String message, String errorCode, String errorMsg, Throwable cause) {
         super(message, cause);
         this.errorCode = errorCode;

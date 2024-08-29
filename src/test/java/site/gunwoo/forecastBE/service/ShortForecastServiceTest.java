@@ -61,66 +61,15 @@ public class ShortForecastServiceTest {
 
     @DisplayName("단기예보 API를 호출하여 단기예보 데이터를 응답받는다.")
     @Test
-    void test() {
+    void callShortForecastApi() {
         //given
-        /*
-        2,5,8,11,14,17,20,23시 중 현재 시각으로부터 가장 가까운 시각 정보를 구한 후
-        시각 정보를 활용해 단기예보 API를 호출한다.
-         */
-        LocalDateTime now = LocalDateTime.now();
-        LocalDate currentDate = now.toLocalDate();
-        LocalTime currentTime = now.toLocalTime();
-
-        List<LocalTime> targetTimes = Arrays.asList(
-                LocalTime.of(2, 13),
-                LocalTime.of(5, 13),
-                LocalTime.of(8, 13),
-                LocalTime.of(11, 13),
-                LocalTime.of(14, 13),
-                LocalTime.of(17, 13),
-                LocalTime.of(20, 13),
-                LocalTime.of(23, 13)
-        );
-
-        LocalTime closestPastTime = null;
-
-        if(currentTime.isAfter(LocalTime.of(23, 13)) || currentTime.isBefore(LocalTime.of(2,13))) {
-            closestPastTime = LocalTime.of(23,0);
-
-        } else {
-            for (LocalTime targetTime : targetTimes) {
-                if (targetTime.isBefore(currentTime)) {
-                    if (closestPastTime == null || targetTime.isAfter(closestPastTime)) {
-                        closestPastTime = targetTime.minusMinutes(13);
-                    }
-                }
-            }
-        }
-
-        LocalDate baseDate = currentDate;
-        if(currentTime.isAfter(LocalTime.of(0,0)) && currentTime.isBefore(LocalTime.of(2, 0))) {
-            baseDate = currentDate.minusDays(1);
-        }
-
-        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyyMMdd");
-        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("hhmm");
-
-        String baseDateStr = baseDate.format(dateFormatter);
-        String baseTimeStr = closestPastTime.format(timeFormatter);
-
         int nx = 62;
         int ny = 123;
 
         //when
-        List<ShortForeCastResponseDTO.Response.Body.Items.ForecastItem> forecast = shortForecastService.callShortForecastApi(baseDateStr, baseTimeStr, 2, 1, nx, ny);
+        List<ShortForeCastResponseDTO.Response.Body.Items.ForecastItem> forecast = shortForecastService.callShortForecastApi(LocalDateTime.now(), nx, ny);
 
         //then
-        assertThat(forecast).hasSize(2)
-                .extracting("baseDate", "baseTime", "nx", "ny")
-                .containsExactlyInAnyOrder(
-                        tuple(baseDateStr, baseTimeStr, nx, ny),
-                        tuple(baseDateStr, baseTimeStr, nx, ny)
-                );
-
+        assertThat(forecast).hasSize(36);
     }
 }

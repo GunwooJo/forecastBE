@@ -130,7 +130,48 @@ public class ShortForecastService {
 
     }
 
-    public List<ShortForeCastResponseDTO.Response.Body.Items.ForecastItem> callShortForecastApi(String baseDate, String baseTime, int numOfRows, int pageNo, int nx, int ny) {
+    public List<ShortForeCastResponseDTO.Response.Body.Items.ForecastItem> callShortForecastApi(LocalDateTime now, int nx, int ny) {
+
+        LocalDate currentDate = now.toLocalDate();
+        LocalTime currentTime = now.toLocalTime();
+
+        List<LocalTime> targetTimes = Arrays.asList(
+                LocalTime.of(2, 13),
+                LocalTime.of(5, 13),
+                LocalTime.of(8, 13),
+                LocalTime.of(11, 13),
+                LocalTime.of(14, 13),
+                LocalTime.of(17, 13),
+                LocalTime.of(20, 13),
+                LocalTime.of(23, 13)
+        );
+
+        LocalTime closestPastTime = null;
+
+        if(currentTime.isAfter(LocalTime.of(23, 13)) || currentTime.isBefore(LocalTime.of(2,13))) {
+            closestPastTime = LocalTime.of(23,0);
+
+        } else {
+            for (LocalTime targetTime : targetTimes) {
+                if (targetTime.isBefore(currentTime)) {
+                    if (closestPastTime == null || targetTime.isAfter(closestPastTime)) {
+                        closestPastTime = targetTime.minusMinutes(13);
+                    }
+                }
+            }
+        }
+
+        LocalDate baseDate = currentDate;
+        if(currentTime.isAfter(LocalTime.of(0,0)) && currentTime.isBefore(LocalTime.of(2, 0))) {
+            baseDate = currentDate.minusDays(1);
+        }
+
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HHmm");
+
+        String inputBaseDate = baseDate.format(dateFormatter);
+        String inputBaseTime = closestPastTime.format(timeFormatter);
+
         WebClient webClient = webClientBuilder
                 .baseUrl("http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0")
                 .build();
@@ -142,11 +183,11 @@ public class ShortForecastService {
                     .uri(uriBuilder -> uriBuilder
                             .path(uri)
                             .queryParam("serviceKey", ForecastConstants.serviceKey)
-                            .queryParam("numOfRows", numOfRows)
-                            .queryParam("pageNo", pageNo)
+                            .queryParam("numOfRows", 36)
+                            .queryParam("pageNo", 1)
                             .queryParam("dataType", "JSON")
-                            .queryParam("base_date", baseDate)
-                            .queryParam("base_time", baseTime)
+                            .queryParam("base_date", inputBaseDate)
+                            .queryParam("base_time", inputBaseTime)
                             .queryParam("nx", nx)
                             .queryParam("ny", ny)
                             .build())

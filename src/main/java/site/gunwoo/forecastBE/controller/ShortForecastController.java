@@ -53,11 +53,12 @@ public class ShortForecastController {
     }
 
     @GetMapping("/short-forecast/api")
-    public ResponseEntity<ResponseDTO> getShortForecastByPosInApi(@RequestBody @Valid ShortForecastRequest request) {
+    public ResponseEntity<ResponseDTO> getShortForecastByPosInApi(
+            @RequestParam("x_pos") int xPos,
+            @RequestParam("y_pos") int yPos) {
 
         try {
-            List<ShortForeCastResponseDTO.Response.Body.Items.ForecastItem> forecasts = shortForecastService.callShortForecastApi(request.getBaseDate(), request.getBaseTime(), request.getNumOfRows(), request.getPageNo(), request.getNx(), request.getNy());
-
+            List<ShortForeCastResponseDTO.Response.Body.Items.ForecastItem> forecasts = shortForecastService.callShortForecastApi(LocalDateTime.now(), xPos, yPos);
             return ResponseEntity.status(HttpStatus.OK).body(new ResponseDTO("조회 성공", forecasts));
 
         } catch (ShortForecastApiException e) {

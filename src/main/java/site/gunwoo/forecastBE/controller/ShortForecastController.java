@@ -31,8 +31,8 @@ public class ShortForecastController {
 
     @GetMapping("/short-forecast/db")
     public ResponseEntity<ResponseDTO> getShortForecastByPosInDb(
-            @RequestParam("x-pos") int xPos,
-            @RequestParam("y-pos") int yPos) {
+            @RequestParam("x_pos") int xPos,
+            @RequestParam("y_pos") int yPos) {
 
         try {
             List<ShortForecast> forecasts = shortForecastService.findShortForecast(LocalDateTime.now(), xPos, yPos);

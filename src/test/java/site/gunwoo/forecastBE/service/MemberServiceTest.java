@@ -26,7 +26,7 @@ class MemberServiceTest {
     private MemberRepository memberRepository;
 
     @AfterEach
-    public void afterEach() {
+    void afterEach() {
         memberRepository.deleteAll();
     }
 

@@ -1,6 +1,7 @@
 package site.gunwoo.forecastBE.repository;
 
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,11 @@ class MemberRepositoryTest {
 
     @Autowired
     private MemberService memberService;
+
+    @AfterEach
+    void afterEach() {
+        memberRepository.deleteAll();
+    }
 
     @DisplayName("이메일로 회원을 조회한다.")
     @Test

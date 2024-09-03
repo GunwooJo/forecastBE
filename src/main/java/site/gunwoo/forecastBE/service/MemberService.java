@@ -44,12 +44,7 @@ public class MemberService {
     }
 
     private boolean isEmailDuplicated(String email) {
-
-        Optional<Member> byEmail = memberRepository.findByEmail(email);
-        if (byEmail.isEmpty()) {
-            return false;
-        }
-        return true;
+        return memberRepository.findByEmail(email).isPresent();
     }
 
     public void login(MemberDTO userDTO, HttpSession session) {

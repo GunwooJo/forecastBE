@@ -1,5 +1,6 @@
 package site.gunwoo.forecastBE.service;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,11 @@ class MemberServiceTest {
 
     @Autowired
     private MemberRepository memberRepository;
+
+    @AfterEach
+    public void afterEach() {
+        memberRepository.deleteAll();
+    }
 
     @DisplayName("이미 가입된 회원의 이메일로 회원가입을 시도하면 예외를 발생시킨다.")
     @Test

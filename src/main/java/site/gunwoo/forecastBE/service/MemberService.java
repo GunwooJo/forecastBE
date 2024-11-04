@@ -14,9 +14,9 @@ import site.gunwoo.forecastBE.entity.Region;
 import site.gunwoo.forecastBE.repository.MemberRepository;
 import site.gunwoo.forecastBE.repository.RegionRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -24,6 +24,7 @@ import java.util.Optional;
 public class MemberService {
 
     private final MemberRepository memberRepository;
+    private final RegionRepository regionRepository;
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     public void join(MemberJoinDTO memberJoinDTO) {
@@ -34,12 +35,25 @@ public class MemberService {
 
         String encodedPw = passwordEncoder.encode(memberJoinDTO.getPassword());
 
-        Member user = Member.builder()
+        List<MemberRegion> memberRegions = new ArrayList<>();
+
+        memberJoinDTO.getRegions()
+                        .forEach(regionNameDTO -> {
+
+                            Region foundRegion = regionRepository.findByR1AndR2AndR3(regionNameDTO.getR1(), regionNameDTO.getR2(), regionNameDTO.getR3())
+                                    .orElseThrow(() -> new NoSuchElementException("해당 지역이 존재하지 않습니다: " + regionNameDTO.getR1() + " " + regionNameDTO.getR2() + " " + regionNameDTO.getR3()));
+                            MemberRegion memberRegion = MemberRegion.createMemberRegion(foundRegion);
+                            memberRegions.add(memberRegion);
+                        });
+
+        Member member = Member.builder()
                 .email(memberJoinDTO.getEmail())
                 .password(encodedPw)
                 .build();
 
-        memberRepository.save(user);
+        member.changeMemberRegions(memberRegions);
+
+        memberRepository.save(member);
 
     }
 

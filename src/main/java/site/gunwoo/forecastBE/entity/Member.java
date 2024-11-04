@@ -30,9 +30,8 @@ public class Member extends BaseTime{
     }
 
     @Builder
-    public Member(String email, String password, List<MemberRegion> memberRegions) {
+    public Member(String email, String password) {
         this.email = email;
         this.password = password;
-        this.memberRegions = memberRegions;
     }
 }

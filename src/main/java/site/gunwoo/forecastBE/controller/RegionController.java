@@ -6,12 +6,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
-import site.gunwoo.forecastBE.dto.RegionDTO;
+import site.gunwoo.forecastBE.dto.region.RegionDTO;
 import site.gunwoo.forecastBE.dto.ResponseDTO;
 import site.gunwoo.forecastBE.entity.Region;
 import site.gunwoo.forecastBE.repository.RegionRepository;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 

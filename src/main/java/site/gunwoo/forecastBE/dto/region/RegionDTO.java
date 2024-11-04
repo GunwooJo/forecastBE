@@ -1,4 +1,4 @@
-package site.gunwoo.forecastBE.dto;
+package site.gunwoo.forecastBE.dto.region;
 
 import lombok.*;
 

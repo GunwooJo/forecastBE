@@ -13,8 +13,14 @@ public class Region {
     @Column(name = "region_id")
     private Long id;
 
-    @Column(length = 30, nullable = false, unique = true)
-    private String name;
+    @Column(nullable = false, length = 30)
+    private String r1; // ex) 서울특별시
+
+    @Column(length = 30)
+    private String r2; // ex) 강남구
+
+    @Column(length = 30)
+    private String r3; // ex) 역삼1동
 
     @Column(name = "x_pos", nullable = false)
     private Short xPos;

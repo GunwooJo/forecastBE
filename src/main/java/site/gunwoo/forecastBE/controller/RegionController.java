@@ -34,7 +34,9 @@ public class RegionController {
             List<RegionDTO> regionDTOS = regions.stream()
                     .map(regionEntity ->
                             RegionDTO.builder()
-                                    .name(regionEntity.getName())
+                                    .r1(regionEntity.getR1())
+                                    .r2(regionEntity.getR2())
+                                    .r3(regionEntity.getR3())
                                     .xPos(regionEntity.getXPos())
                                     .yPos(regionEntity.getYPos())
                                     .build()

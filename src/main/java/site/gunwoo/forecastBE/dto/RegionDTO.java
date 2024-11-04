@@ -1,6 +1,5 @@
 package site.gunwoo.forecastBE.dto;
 
-import jakarta.persistence.Column;
 import lombok.*;
 
 @Getter
@@ -9,7 +8,11 @@ import lombok.*;
 @Builder
 public class RegionDTO {
 
-    private String name;
+    private String r1;
+
+    private String r2;
+
+    private String r3;
 
     private Short xPos;
 

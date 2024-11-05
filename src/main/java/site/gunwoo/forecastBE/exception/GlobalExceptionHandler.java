@@ -1,5 +1,6 @@
 package site.gunwoo.forecastBE.exception;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -10,8 +11,10 @@ import site.gunwoo.forecastBE.dto.ResponseDTO;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 @RestControllerAdvice
+@Slf4j
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -22,7 +25,20 @@ public class GlobalExceptionHandler {
             String errorMessage = error.getDefaultMessage();
             errors.put(fieldName, errorMessage);
         });
+        log.error("오류 발생: ", ex);
         return new ResponseEntity<>(new ResponseDTO("validation 오류", errors), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ResponseDTO> illegalArgumentException(IllegalArgumentException ex) {
+        log.error("오류 발생: ", ex);
+        return new ResponseEntity<>(new ResponseDTO(ex.getMessage(), null), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(NoSuchElementException.class)
+    public ResponseEntity<ResponseDTO> noSuchElementException(NoSuchElementException ex) {
+        log.error("오류 발생: ", ex);
+        return new ResponseEntity<>(new ResponseDTO(ex.getMessage(), null), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(Exception.class)

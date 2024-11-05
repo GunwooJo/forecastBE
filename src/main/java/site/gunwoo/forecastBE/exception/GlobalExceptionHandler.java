@@ -1,5 +1,6 @@
 package site.gunwoo.forecastBE.exception;
 
+import jakarta.persistence.NoResultException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -37,6 +38,12 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(NoSuchElementException.class)
     public ResponseEntity<ResponseDTO> noSuchElementException(NoSuchElementException ex) {
+        log.error("오류 발생: ", ex);
+        return new ResponseEntity<>(new ResponseDTO(ex.getMessage(), null), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(NoResultException.class)
+    public ResponseEntity<ResponseDTO> noResultException(NoResultException ex) {
         log.error("오류 발생: ", ex);
         return new ResponseEntity<>(new ResponseDTO(ex.getMessage(), null), HttpStatus.BAD_REQUEST);
     }

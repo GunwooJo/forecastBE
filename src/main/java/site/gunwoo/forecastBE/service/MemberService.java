@@ -16,7 +16,6 @@ import site.gunwoo.forecastBE.repository.RegionRepository;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 @Service
 @RequiredArgsConstructor
@@ -41,7 +40,7 @@ public class MemberService {
                         .forEach(regionNameDTO -> {
 
                             Region foundRegion = regionRepository.findByR1AndR2AndR3(regionNameDTO.getR1(), regionNameDTO.getR2(), regionNameDTO.getR3())
-                                    .orElseThrow(() -> new NoSuchElementException("해당 지역이 존재하지 않습니다: " + regionNameDTO.getR1() + " " + regionNameDTO.getR2() + " " + regionNameDTO.getR3()));
+                                    .orElseThrow(() -> new NoResultException("해당 지역이 존재하지 않습니다: " + regionNameDTO.getR1() + " " + regionNameDTO.getR2() + " " + regionNameDTO.getR3()));
                             MemberRegion memberRegion = MemberRegion.createMemberRegion(foundRegion);
                             memberRegions.add(memberRegion);
                         });

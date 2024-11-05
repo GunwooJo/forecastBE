@@ -3,6 +3,9 @@ package site.gunwoo.forecastBE.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 @Entity
 @Getter
@@ -21,6 +24,9 @@ public class Region {
 
     @Column(length = 30)
     private String r3; // ex) 역삼1동
+
+    @OneToMany(mappedBy = "region", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<MemberRegion> memberRegions = new ArrayList<>();
 
     @Column(name = "x_pos", nullable = false)
     private Short xPos;

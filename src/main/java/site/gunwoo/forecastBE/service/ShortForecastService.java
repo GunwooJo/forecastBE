@@ -33,14 +33,14 @@ public class ShortForecastService {
     private final MailService mailService;
     private static final String adminEmail = "kanggi1997@gmail.com";
 
-    //강수확률을 알기 위한 단기예보 조회 후 저장.
+    //강수확률을 알기 위한 초단기예보 조회 후 저장. (RN1인 항목만)
     public void saveShortForecast(String baseDate, String baseTime, int numOfRows, int pageNo, int nx, int ny) {
 
         WebClient webClient = webClientBuilder
                 .baseUrl("http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0")
                 .build();
 
-        String uri = "/getVilageFcst";
+        String uri = "/getUltraSrtFcst"; //초단기예보 조회
 
         try {
             ShortForeCastResponseDTO response = webClient.get()
@@ -88,18 +88,19 @@ public class ShortForecastService {
             List<ShortForeCastResponseDTO.Response.Body.Items.ForecastItem> itemList = response.getResponse().getBody().getItems().getItem();
 
             List<ShortForecast> forecastItems = itemList.stream()
-                    .map(forecastItem -> {
-                        return ShortForecast.builder()
-                                .baseDate(LocalDate.parse(forecastItem.getBaseDate(), dateFormatter))
-                                .baseTime(LocalTime.parse(forecastItem.getBaseTime(), timeFormatter))
-                                .category(forecastItem.getCategory())
-                                .fcstDate(LocalDate.parse(forecastItem.getFcstDate(), dateFormatter))
-                                .fcstTime(LocalTime.parse(forecastItem.getFcstTime(), timeFormatter))
-                                .fcstValue(forecastItem.getFcstValue())
-                                .nx(forecastItem.getNx())
-                                .ny(forecastItem.getNy())
-                                .build();
-                    }).toList();
+                    .filter(forecastItem -> "RN1".equals(forecastItem.getCategory()))
+                    .map(forecastItem ->
+                        ShortForecast.builder()
+                            .baseDate(LocalDate.parse(forecastItem.getBaseDate(), dateFormatter))
+                            .baseTime(LocalTime.parse(forecastItem.getBaseTime(), timeFormatter))
+                            .category(forecastItem.getCategory())
+                            .fcstDate(LocalDate.parse(forecastItem.getFcstDate(), dateFormatter))
+                            .fcstTime(LocalTime.parse(forecastItem.getFcstTime(), timeFormatter))
+                            .fcstValue(forecastItem.getFcstValue())
+                            .nx(forecastItem.getNx())
+                            .ny(forecastItem.getNy())
+                            .build())
+                    .toList();
             shortForecastRepository.saveAll(forecastItems);
 
         } catch (WebClientResponseException ex) {

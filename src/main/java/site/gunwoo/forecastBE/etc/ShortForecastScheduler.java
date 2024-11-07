@@ -3,7 +3,9 @@ package site.gunwoo.forecastBE.etc;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import site.gunwoo.forecastBE.repository.RegionRepository;
+import site.gunwoo.forecastBE.dto.PositionDTO;
+import site.gunwoo.forecastBE.entity.MemberRegion;
+import site.gunwoo.forecastBE.repository.MemberRegionRepository;
 import site.gunwoo.forecastBE.repository.ShortForecastRepository;
 import site.gunwoo.forecastBE.service.ShortForecastService;
 
@@ -11,33 +13,43 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
 @Component
 @RequiredArgsConstructor
 public class ShortForecastScheduler {
 
-    private final RegionRepository regionRepository;
     private final ShortForecastService shortForecastService;
     private final ShortForecastRepository shortForecastRepository;
+    private final MemberRegionRepository memberRegionRepository;
 
-    /* 3시간마다 단기예보 데이터 받아오기 */
-    @Scheduled(cron = "0 12 2,5,8,11,14,17,20,23 * * ?")
+    /* 1시간마다 초단기예보 데이터 받아오기 */
+    @Scheduled(cron = "0 17 * * * ?")
     public void getShortForecastData() {
 
-        List<Object[]> positionList = regionRepository.findDistinctByXPosAndYPos();
-        for (Object[] position : positionList) {
-            short xPos = (short) position[0];
-            short yPos = (short) position[1];
+        List<PositionDTO> positions = new ArrayList<>();
+
+        List<MemberRegion> memberRegions = memberRegionRepository.findAllWithRegion();
+        memberRegions.forEach(mr -> {
+            short xPos = mr.getRegion().getXPos();
+            short yPos = mr.getRegion().getYPos();
+            positions.add(new PositionDTO(xPos, yPos));
+        });
+
+        for (PositionDTO position : positions) {
+            short xPos = position.getXPos();
+            short yPos = position.getYPos();
 
             DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyyMMdd");
             String currentDate = LocalDate.now().format(dateFormatter);
 
             DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HHmm");
-            String currentTime = LocalTime.now().withMinute(0).format(timeFormatter); // 분을 0으로 설정
+            LocalTime now = LocalTime.now();
+            LocalTime closestPast45Minute = now.withMinute(45).isBefore(now) ? now.withMinute(45) : now.withMinute(45).minusHours(1);
+            String currentTime = closestPast45Minute.format(timeFormatter);
 
-            shortForecastService.saveShortForecast(currentDate, currentTime, 36, 1, xPos, yPos);
+            shortForecastService.saveShortForecast(currentDate, currentTime, 60, 1, xPos, yPos);
         }
     }
 

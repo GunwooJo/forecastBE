@@ -25,7 +25,7 @@ public class ShortForecastScheduler {
     private final MemberRegionRepository memberRegionRepository;
 
     /* 1시간마다 초단기예보 데이터 받아오기 */
-    @Scheduled(cron = "0 17 * * * ?")
+    @Scheduled(cron = "0 46 * * * ?")
     public void getShortForecastData() {
 
         List<PositionDTO> positions = new ArrayList<>();

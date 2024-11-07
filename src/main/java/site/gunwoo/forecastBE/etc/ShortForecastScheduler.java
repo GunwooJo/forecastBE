@@ -46,8 +46,8 @@ public class ShortForecastScheduler {
 
             DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HHmm");
             LocalTime now = LocalTime.now();
-            LocalTime closestPast45Minute = now.withMinute(45).isBefore(now) ? now.withMinute(45) : now.withMinute(45).minusHours(1);
-            String currentTime = closestPast45Minute.format(timeFormatter);
+            LocalTime closestPast46Minute = now.withMinute(46).isBefore(now) ? now.withMinute(46) : now.withMinute(46).minusHours(1);
+            String currentTime = closestPast46Minute.format(timeFormatter);
 
             shortForecastService.saveShortForecast(currentDate, currentTime, 60, 1, xPos, yPos);
         }

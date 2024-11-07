@@ -1,4 +1,4 @@
-package site.gunwoo.forecastBE.etc;
+package site.gunwoo.forecastBE.config.auth;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

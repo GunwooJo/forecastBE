@@ -1,4 +1,4 @@
-package site.gunwoo.forecastBE.etc;
+package site.gunwoo.forecastBE.config.auth;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
@@ -27,7 +27,7 @@ public class JwtUtil {
         this.accessTokenExpTime = accessTokenExpTime;
     }
 
-    private String createAccessToken(MemberDTO member) {
+    public String createAccessToken(MemberDTO member) {
         Claims claims = Jwts.claims();
         claims.put("email", member.getEmail());
 

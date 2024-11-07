@@ -18,7 +18,8 @@ import site.gunwoo.forecastBE.repository.RegionRepository;
 import site.gunwoo.forecastBE.service.ShortForecastService;
 import site.gunwoo.forecastBE.service.MemberService;
 
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -36,11 +37,13 @@ public class MemberController {
     }
 
     @PostMapping("/user/login")
-    public ResponseEntity<ResponseDTO> login(@RequestBody @Valid MemberDTO memberDTO, HttpSession session) {
+    public ResponseEntity<ResponseDTO> login(@RequestBody @Valid MemberDTO memberDTO) {
 
         try {
-            memberService.login(memberDTO, session);
-            return ResponseEntity.status(HttpStatus.OK).body(new ResponseDTO("로그인에 성공했습니다.", null));
+            String accessToken = memberService.login(memberDTO);
+            Map<String, String> tokenRes = new HashMap<>();
+            tokenRes.put("accessToken", accessToken);
+            return ResponseEntity.status(HttpStatus.OK).body(new ResponseDTO("로그인에 성공했습니다.", tokenRes));
 
         } catch (NoResultException | IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDTO("존재하지 않는 사용자거나 비밀번호가 틀렸습니다.", null));

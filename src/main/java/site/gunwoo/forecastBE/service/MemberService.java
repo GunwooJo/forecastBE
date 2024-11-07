@@ -1,7 +1,6 @@
 package site.gunwoo.forecastBE.service;
 
 import jakarta.persistence.NoResultException;
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -11,6 +10,7 @@ import site.gunwoo.forecastBE.dto.MemberJoinDTO;
 import site.gunwoo.forecastBE.entity.Member;
 import site.gunwoo.forecastBE.entity.MemberRegion;
 import site.gunwoo.forecastBE.entity.Region;
+import site.gunwoo.forecastBE.config.auth.JwtUtil;
 import site.gunwoo.forecastBE.repository.MemberRepository;
 import site.gunwoo.forecastBE.repository.RegionRepository;
 
@@ -24,6 +24,7 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
     private final RegionRepository regionRepository;
+    private final JwtUtil jwtUtil;
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     public void join(MemberJoinDTO memberJoinDTO) {
@@ -60,14 +61,14 @@ public class MemberService {
         return memberRepository.findByEmail(email).isPresent();
     }
 
-    public void login(MemberDTO userDTO, HttpSession session) {
+    public String login(MemberDTO userDTO) {
 
         Member foundUser = memberRepository.findByEmail(userDTO.getEmail())
                 .orElseThrow(() -> new NoResultException("해당 이메일을 가진 사용자가 없습니다.: " + userDTO.getEmail()));
 
         if (passwordEncoder.matches(userDTO.getPassword(), foundUser.getPassword())) {
-            session.setAttribute("loggedInUser", foundUser.getEmail());
-            session.setMaxInactiveInterval(60 * 30); // 초 단위
+            return jwtUtil.createAccessToken(new MemberDTO(foundUser.getEmail(), foundUser.getPassword()));
+
         } else {
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }

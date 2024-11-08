@@ -12,7 +12,7 @@ public class MailService {
 
     private final JavaMailSender javaMailSender;
 
-    public void mailSend(MailDTO mailDTO){
+    public void sendMail(MailDTO mailDTO){
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(mailDTO.getAddress());
         message.setSubject(mailDTO.getTitle());

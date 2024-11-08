@@ -33,7 +33,7 @@ public class ShortForecastService {
     private final MailService mailService;
     private static final String adminEmail = "kanggi1997@gmail.com";
 
-    //강수확률을 알기 위한 초단기예보 조회 후 저장. (RN1인 항목만)
+    //강수확률을 알기 위한 초단기예보 조회 후 저장. (category가 RN1, PTY인 항목만)
     public void saveShortForecast(String baseDate, String baseTime, int numOfRows, int pageNo, int nx, int ny) {
 
         WebClient webClient = webClientBuilder
@@ -88,7 +88,7 @@ public class ShortForecastService {
             List<ShortForeCastResponseDTO.Response.Body.Items.ForecastItem> itemList = response.getResponse().getBody().getItems().getItem();
 
             List<ShortForecast> forecastItems = itemList.stream()
-                    .filter(forecastItem -> "RN1".equals(forecastItem.getCategory()))
+                    .filter(forecastItem -> "RN1".equals(forecastItem.getCategory()) || "PTY".equals(forecastItem.getCategory()))
                     .map(forecastItem ->
                         ShortForecast.builder()
                             .baseDate(LocalDate.parse(forecastItem.getBaseDate(), dateFormatter))

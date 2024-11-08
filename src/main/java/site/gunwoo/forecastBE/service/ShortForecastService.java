@@ -78,7 +78,7 @@ public class ShortForecastService {
                         .title(emailTitle)
                         .message(emailMessage)
                         .build();
-                mailService.mailSend(mailDTO);
+                mailService.sendMail(mailDTO);
                 throw new ShortForecastException(response.getResponse().getHeader().getResultMsg());
             }
 
@@ -112,7 +112,7 @@ public class ShortForecastService {
                     .title(emailTitle)
                     .message(emailMessage)
                     .build();
-            mailService.mailSend(mailDTO);
+            mailService.sendMail(mailDTO);
 
             if (ex.getStatusCode().is4xxClientError()) {
                 log.error(ex.getMessage());

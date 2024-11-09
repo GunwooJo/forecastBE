@@ -28,9 +28,9 @@ public class Region {
     @OneToMany(mappedBy = "region", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MemberRegion> memberRegions = new ArrayList<>();
 
-    @Column(name = "x_pos", nullable = false)
-    private Short xPos;
+    @Column(nullable = false)
+    private Short nx;
 
-    @Column(name = "y_pos", nullable = false)
-    private Short yPos;
+    @Column(nullable = false)
+    private Short ny;
 }

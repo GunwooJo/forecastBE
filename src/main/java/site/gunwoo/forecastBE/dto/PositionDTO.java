@@ -7,6 +7,6 @@ import lombok.Getter;
 @AllArgsConstructor
 public class PositionDTO {
 
-    private short xPos;
-    private short yPos;
+    private short nx;
+    private short ny;
 }

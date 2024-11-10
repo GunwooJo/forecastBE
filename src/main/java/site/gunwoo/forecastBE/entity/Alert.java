@@ -18,6 +18,11 @@ public class Alert {
     @JoinColumn(name = "member_id")
     private Member member;
 
+    public void changeMember(Member member) {
+        this.member = member;
+        member.getAlerts().add(this);
+    }
+
     @Column(nullable = false, length = 30)
     private String r1; // ex) 서울특별시
 

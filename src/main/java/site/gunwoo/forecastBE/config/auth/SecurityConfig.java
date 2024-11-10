@@ -26,7 +26,7 @@ public class SecurityConfig  {
     private final CustomAuthenticationEntryPoint authenticationEntryPoint;
 
     private static final String[] AUTH_WHITELIST = {
-            "/user/login", "/user/join"
+            "/user/login", "/user/join", "/test"
     };
 
     @Bean

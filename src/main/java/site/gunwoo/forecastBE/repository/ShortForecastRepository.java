@@ -19,4 +19,6 @@ public interface ShortForecastRepository extends JpaRepository<ShortForecast, Lo
 
     @Query("select s from ShortForecast s where s.baseDate = :baseDate and s.baseTime = :baseTime and s.nx = :nx and s.ny = :ny")
     List<ShortForecast> findShortForecast(LocalDate baseDate, LocalTime baseTime, int nx, int ny);
+
+    List<ShortForecast> findByFcstDateGreaterThanEqual(LocalDate fcstDate);
 }

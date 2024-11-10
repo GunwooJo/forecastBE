@@ -36,8 +36,8 @@ public class RegionController {
                                     .r1(regionEntity.getR1())
                                     .r2(regionEntity.getR2())
                                     .r3(regionEntity.getR3())
-                                    .xPos(regionEntity.getXPos())
-                                    .yPos(regionEntity.getYPos())
+                                    .xPos(regionEntity.getNx())
+                                    .yPos(regionEntity.getNy())
                                     .build()
                     ).collect(Collectors.toList());
 

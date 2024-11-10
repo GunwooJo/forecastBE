@@ -8,8 +8,8 @@ import java.util.List;
 import java.util.Optional;
 
 public interface RegionRepository extends JpaRepository<Region, Long> {
-    @Query("SELECT DISTINCT r.xPos, r.yPos FROM Region r")
-    List<Object[]> findDistinctByXPosAndYPos();
+    @Query("SELECT DISTINCT r.nx, r.ny FROM Region r")
+    List<Object[]> findDistinctByNxAndNy();
 
     Optional<Region> findByR1AndR2AndR3(String r1, String r2, String r3);
 }

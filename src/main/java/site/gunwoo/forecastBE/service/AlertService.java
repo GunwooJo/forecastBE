@@ -39,8 +39,8 @@ public class AlertService {
         LocalDate yesterday = now.toLocalDate().minusDays(1);
         List<ShortForecast> shortForecasts = shortForecastRepository.findByFcstDateGreaterThanEqual(yesterday); //어제부터의 ShortForecast 리스트
 
-        LocalTime nextHour = now.toLocalTime().plusHours(1).withMinute(0);
-        LocalTime latest30Min = now.toLocalTime().minusHours(1).withMinute(30);
+        LocalTime nextHour = now.toLocalTime().plusHours(1).withMinute(0); // ex) 현재 20:14이면 21:00
+        LocalTime latest30Min = now.toLocalTime().minusHours(1).withMinute(30); // ex) 현재 20:14이면 18:30
 
         List<ShortForecast> alertForecasts = shortForecasts.stream()    //비 또는 눈이 오는 ShortForecast 리스트 중 지역별 가장 최신 데이터.
                 .filter(sf -> "RN1".equals(sf.getCategory()) &&

@@ -11,5 +11,5 @@ public interface RegionRepository extends JpaRepository<Region, Long> {
     @Query("SELECT DISTINCT r.nx, r.ny FROM Region r")
     List<Object[]> findDistinctByNxAndNy();
 
-    Optional<Region> findByR1AndR2AndR3(String r1, String r2, String r3);
+    Optional<Region> findByR1AndR2AndR3AndNxAndNy(String r1, String r2, String r3, short nx, short ny);
 }

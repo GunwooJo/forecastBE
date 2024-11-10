@@ -15,9 +15,11 @@ import site.gunwoo.forecastBE.dto.MemberJoinDTO;
 import site.gunwoo.forecastBE.dto.ResponseDTO;
 import site.gunwoo.forecastBE.dto.MemberDTO;
 import site.gunwoo.forecastBE.repository.RegionRepository;
+import site.gunwoo.forecastBE.service.AlertService;
 import site.gunwoo.forecastBE.service.ShortForecastService;
 import site.gunwoo.forecastBE.service.MemberService;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,6 +31,7 @@ public class MemberController {
     private final MemberService memberService;
     private final ShortForecastService shortForecastService;
     private final RegionRepository regionRepository;
+    private final AlertService alertService;
 
     @PostMapping("/user/join")
     public ResponseEntity<ResponseDTO> join(@RequestBody @Valid MemberJoinDTO memberJoinDTO) {
@@ -54,16 +57,7 @@ public class MemberController {
 
     @GetMapping("/test")
     public ResponseEntity<ResponseDTO> test() {
-
-        try {
-            shortForecastService.saveShortForecast("20240828", "1700", 1000, 1, 62, 123);
-            shortForecastService.saveShortForecast("20240828", "1700", 1000, 1, 55, 123);
-            return ResponseEntity.status(HttpStatus.CREATED).body(new ResponseDTO("성공", null));
-
-        } catch (Exception e) {
-            log.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseDTO("서버 에러가 발생했습니다: " + e.getMessage(), null));
-        }
-
+        alertService.sendForecastAlert(LocalDateTime.now());
+        return ResponseEntity.status(HttpStatus.OK).body(new ResponseDTO("테스트 완료", null));
     }
 }

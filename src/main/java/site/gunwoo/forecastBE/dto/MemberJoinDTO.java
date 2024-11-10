@@ -21,13 +21,16 @@ public class MemberJoinDTO {
     @NotEmpty(message = "비밀번호는 필수 값입니다.")
     private String password;
 
-    @NotEmpty(message = "지역을 선택해야 합니다.")
-    private List<RegionNameDTO> regions = new ArrayList<>();
+    @NotEmpty(message = "알림을 받을 지역을 선택해야 합니다.")
+    private List<AlertDTO> alerts = new ArrayList<>();
+
+//    @NotEmpty(message = "지역을 선택해야 합니다.")
+//    private List<RegionNameDTO> regions = new ArrayList<>();
 
     @Builder
-    public MemberJoinDTO(String email, String password, List<RegionNameDTO> regions) {
+    public MemberJoinDTO(String email, String password, List<AlertDTO> alerts) {
         this.email = email;
         this.password = password;
-        this.regions = regions;
+        this.alerts = alerts;
     }
 }

@@ -2,14 +2,14 @@ package site.gunwoo.forecastBE.service;
 
 import jakarta.persistence.NoResultException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import site.gunwoo.forecastBE.dto.MemberDTO;
 import site.gunwoo.forecastBE.dto.MemberJoinDTO;
+import site.gunwoo.forecastBE.entity.Alert;
 import site.gunwoo.forecastBE.entity.Member;
-import site.gunwoo.forecastBE.entity.MemberRegion;
-import site.gunwoo.forecastBE.entity.Region;
 import site.gunwoo.forecastBE.config.auth.JwtUtil;
 import site.gunwoo.forecastBE.repository.MemberRepository;
 import site.gunwoo.forecastBE.repository.RegionRepository;
@@ -17,6 +17,7 @@ import site.gunwoo.forecastBE.repository.RegionRepository;
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -35,24 +36,33 @@ public class MemberService {
 
         String encodedPw = passwordEncoder.encode(memberJoinDTO.getPassword());
 
-        List<MemberRegion> memberRegions = new ArrayList<>();
-
-        memberJoinDTO.getRegions()
-                        .forEach(regionNameDTO -> {
-
-                            Region foundRegion = regionRepository.findByR1AndR2AndR3(regionNameDTO.getR1(), regionNameDTO.getR2(), regionNameDTO.getR3())
-                                    .orElseThrow(() -> new NoResultException("해당 지역이 존재하지 않습니다: " + regionNameDTO.getR1() + " " + regionNameDTO.getR2() + " " + regionNameDTO.getR3()));
-                            MemberRegion memberRegion = MemberRegion.createMemberRegion(foundRegion);
-                            memberRegions.add(memberRegion);
-                        });
-
         Member member = Member.builder()
                 .email(memberJoinDTO.getEmail())
                 .password(encodedPw)
                 .build();
 
-        member.changeMemberRegions(memberRegions);
+        List<Alert> alerts = new ArrayList<>();
+        memberJoinDTO.getAlerts()
+                .forEach(alertDTO -> {
+                    regionRepository.findByR1AndR2AndR3AndNxAndNy(
+                                    alertDTO.getR1(),
+                                    alertDTO.getR2(),
+                                    alertDTO.getR3(),
+                                    alertDTO.getNx(),
+                                    alertDTO.getNy())
+                            .orElseThrow(() -> new NoResultException("해당 지역이 존재하지 않습니다: " + alertDTO.getR1() + " " + alertDTO.getR2() + " " + alertDTO.getR3()));
 
+                    Alert alert = Alert.builder()
+                            .r1(alertDTO.getR1())
+                            .r2(alertDTO.getR2())
+                            .r3(alertDTO.getR3())
+                            .nx(alertDTO.getNx())
+                            .ny(alertDTO.getNy())
+                            .build();
+                    alerts.add(alert);
+                });
+
+        member.changeAlerts(alerts);
         memberRepository.save(member);
 
     }

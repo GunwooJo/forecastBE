@@ -1,7 +1,6 @@
 package site.gunwoo.forecastBE.controller;
 
 import jakarta.persistence.NoResultException;
-import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -57,7 +56,9 @@ public class MemberController {
 
     @GetMapping("/test")
     public ResponseEntity<ResponseDTO> test() {
-        alertService.sendForecastAlert(LocalDateTime.now());
+        // 특정 시간 기준으로 메일 전송 테스트
+        LocalDateTime tempNow = LocalDateTime.of(2024, 11, 10, 20, 45);
+        alertService.sendForecastAlert(tempNow);
         return ResponseEntity.status(HttpStatus.OK).body(new ResponseDTO("테스트 완료", null));
     }
 }

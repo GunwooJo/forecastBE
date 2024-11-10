@@ -11,7 +11,7 @@ public class AlertDTO {
 
     private String r3; // ex) 역삼1동
 
-    private int nx;
+    private short nx;
 
-    private int ny;
+    private short ny;
 }

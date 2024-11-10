@@ -28,13 +28,13 @@ public class Alert {
     private String r3; // ex) 역삼1동
 
     @Column(name = "x_pos", nullable = false)
-    private Integer nx;
+    private short nx;
 
     @Column(name = "y_pos", nullable = false)
-    private Integer ny;
+    private short ny;
 
     @Builder
-    public Alert(String r1, String r2, String r3, Integer nx, Integer ny) {
+    public Alert(String r1, String r2, String r3, short nx, short ny) {
         this.r1 = r1;
         this.r2 = r2;
         this.r3 = r3;

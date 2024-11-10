@@ -33,14 +33,14 @@ public class ShortForecastScheduler {
 
         List<MemberRegion> memberRegions = memberRegionRepository.findAllWithRegion();
         memberRegions.forEach(mr -> {
-            short xPos = mr.getRegion().getXPos();
-            short yPos = mr.getRegion().getYPos();
+            short xPos = mr.getRegion().getNx();
+            short yPos = mr.getRegion().getNy();
             positions.add(new PositionDTO(xPos, yPos));
         });
 
         for (PositionDTO position : positions) {
-            short xPos = position.getXPos();
-            short yPos = position.getYPos();
+            short xPos = position.getNx();
+            short yPos = position.getNy();
 
             DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyyMMdd");
             String currentDate = LocalDate.now().format(dateFormatter);

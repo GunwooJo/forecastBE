@@ -14,7 +14,7 @@ public class RegionDTO {
 
     private String r3;
 
-    private Short xPos;
+    private Short nx;
 
-    private Short yPos;
+    private Short ny;
 }

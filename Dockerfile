@@ -1,4 +1,4 @@
-FROM openjdk:21-jdk
+FROM openjdk:21-jdk-slim
 
 COPY build/libs/forecastBE-0.0.1-SNAPSHOT.jar /app.jar
 

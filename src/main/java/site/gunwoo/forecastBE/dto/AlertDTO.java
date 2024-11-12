@@ -1,8 +1,12 @@
 package site.gunwoo.forecastBE.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 
 @Getter
+@AllArgsConstructor
+@Builder
 public class AlertDTO {
 
     private String r1; // ex) 서울특별시

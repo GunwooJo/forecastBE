@@ -2,6 +2,8 @@ package site.gunwoo.forecastBE.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -38,6 +40,7 @@ public class ShortForecastService {
 
         WebClient webClient = webClientBuilder
                 .baseUrl("http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0")
+                .defaultHeader(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE)
                 .build();
 
         String uri = "/getUltraSrtFcst"; //초단기예보 조회

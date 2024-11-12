@@ -84,4 +84,19 @@ public class AlertService {
         alert.changeMember(foundMember);
         alertRepository.save(alert);
     }
+
+    public void deleteAlert(String userEmail, Long id) {
+
+        Member foundMember = memberRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new NoResultException("해당 이메일로 등록된 사용자를 찾을 수 없습니다."));
+
+        Alert foundAlert = alertRepository.findById(id)
+                .orElseThrow(() -> new NoResultException("해당 위치에 대한 알림을 찾을 수 없습니다."));
+
+        if (!foundAlert.getMember().equals(foundMember)) {
+            throw new IllegalArgumentException("해당 알림을 삭제할 권한이 없습니다.");
+        }
+
+        alertRepository.delete(foundAlert);
+    }
 }

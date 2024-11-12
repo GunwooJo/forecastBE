@@ -9,6 +9,8 @@ import lombok.Getter;
 @Builder
 public class AlertDTO {
 
+    private Long id;
+
     private String r1; // ex) 서울특별시
 
     private String r2; // ex) 강남구

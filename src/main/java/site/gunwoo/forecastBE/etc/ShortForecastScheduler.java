@@ -50,7 +50,7 @@ public class ShortForecastScheduler {
             LocalTime now = LocalTime.now();
             LocalTime closestPast50Minute = now.withMinute(50).isBefore(now) ? now.withMinute(50) : now.withMinute(50).minusHours(1);
 
-            // 오전 12시 ~ 12시 45분 사이의 경우, 날짜를 하루 전으로 설정
+            // 오전 12시 ~ 12시 50분 사이의 경우, 날짜를 하루 전으로 설정
             if (now.isBefore(LocalTime.of(0, 50))) {
                 currentDate = LocalDate.now().minusDays(1).format(dateFormatter);
             }

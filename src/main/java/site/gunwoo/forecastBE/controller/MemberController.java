@@ -57,7 +57,7 @@ public class MemberController {
     @GetMapping("/test")
     public ResponseEntity<ResponseDTO> test() {
         // 특정 시간 기준으로 메일 전송 테스트
-        LocalDateTime tempNow = LocalDateTime.of(2024, 11, 10, 20, 45);
+        LocalDateTime tempNow = LocalDateTime.of(2024, 11, 13, 12, 00);
         alertService.sendForecastAlert(tempNow);
         return ResponseEntity.status(HttpStatus.OK).body(new ResponseDTO("테스트 완료", null));
     }

@@ -50,7 +50,7 @@ public class AlertService {
                         )
                 .toList();
 
-        List<Alert> allAlerts = alertRepository.findAll(); // 모든 Alert 리스트
+        List<Alert> allAlerts = alertRepository.findAllWithMember(); // 모든 Alert 리스트
 
         alertForecasts.forEach(af -> {
             allAlerts.stream()

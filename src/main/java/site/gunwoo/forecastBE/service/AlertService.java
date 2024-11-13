@@ -90,7 +90,7 @@ public class AlertService {
         Member foundMember = memberRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new NoResultException("해당 이메일로 등록된 사용자를 찾을 수 없습니다."));
 
-        Alert foundAlert = alertRepository.findById(id)
+        Alert foundAlert = alertRepository.findByIdWithMember(id)
                 .orElseThrow(() -> new NoResultException("해당 위치에 대한 알림을 찾을 수 없습니다."));
 
         if (!foundAlert.getMember().equals(foundMember)) {

@@ -30,7 +30,7 @@ public class ShortForecastScheduler {
     private final AlertRepository alertRepository;
 
     /* 1시간마다 초단기예보 데이터 받아오기 */
-    @Scheduled(cron = "0 46 * * * ?")
+    @Scheduled(cron = "0 50 * * * ?")
     public void saveShortForecastData() {
 
         List<PositionDTO> positions = new ArrayList<>(); // 사용자가 알림을 등록한 지역의 위치 리스트
@@ -48,14 +48,14 @@ public class ShortForecastScheduler {
 
             DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HHmm");
             LocalTime now = LocalTime.now();
-            LocalTime closestPast46Minute = now.withMinute(46).isBefore(now) ? now.withMinute(46) : now.withMinute(46).minusHours(1);
+            LocalTime closestPast50Minute = now.withMinute(50).isBefore(now) ? now.withMinute(50) : now.withMinute(50).minusHours(1);
 
             // 오전 12시 ~ 12시 45분 사이의 경우, 날짜를 하루 전으로 설정
-            if (now.isBefore(LocalTime.of(0, 46))) {
+            if (now.isBefore(LocalTime.of(0, 50))) {
                 currentDate = LocalDate.now().minusDays(1).format(dateFormatter);
             }
 
-            String currentTime = closestPast46Minute.format(timeFormatter);
+            String currentTime = closestPast50Minute.format(timeFormatter);
 
             shortForecastService.saveShortForecast(currentDate, currentTime, 60, 1, nx, ny);
         }

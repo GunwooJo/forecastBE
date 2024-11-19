@@ -96,6 +96,8 @@ public class ShortForecastService {
 
         } catch (WebClientResponseException ex) {
 
+            log.error("오류 발생: ", ex);
+
             String emailTitle = "단기예보 API 호출 중 오류 발생!";
             String emailMessage = "에러코드: " + ex.getStatusCode() + "\n" + "메시지: " + ex.getMessage();
             MailDTO mailDTO = MailDTO.builder()
@@ -106,15 +108,12 @@ public class ShortForecastService {
             mailService.sendMail(mailDTO);
 
             if (ex.getStatusCode().is4xxClientError()) {
-                log.error(ex.getMessage());
                 throw new ShortForecastException("단기예보 api 호출 중 client 에러 발생", ex);
 
             } else if (ex.getStatusCode().is5xxServerError()) {
-                log.error(ex.getMessage());
                 throw new ShortForecastException("단기예보 api 호출 중 server 에러 발생", ex);
 
             } else {
-                log.error(ex.getMessage());
                 throw new RuntimeException("예상치 못한 에러 발생", ex);
             }
         }
